@@ -48,8 +48,6 @@ prescribed manner so that they fit properly in the data center.  The two
 projects are os-services and ceph-services.  See the README files of each project
 to determine what is required here.
 
-.. Hint:: Only os-services needs to be configured
-
 The final step is to invoke cluster-create.sh in the os-services
 repository to install and configure the cluster.  os-services orchestrates
 the installation process of OpenStack, Ceph, and Operational Management which are
@@ -64,6 +62,13 @@ integrated into the OpenStack dashboard.  It monitors the cloud infrastructure
 and shows metrics relates to the capacity, utilization, and health of the 
 cloud infrastructure.  It may also be configured to generate alerts when 
 components fail.  It is provided through the opsmgr repository.
+
+.. Hint:: 
+   Only os-services must be configured before invoking create-cluster.  For 
+   more info, see related projects below.
+
+   Passwords may be found in /etc/openstack_deploy/user_secrets*.yml on 
+   the first OpenStack controller node.
 
 Getting Started
 ---------------
@@ -141,6 +146,7 @@ The following projects provides services that are used as major building blocks 
 recipes:
 
     - `cluster-genesis <https://github.com/open-power-ref-design-toolkit/cluster-genesis>`_
+    - `os-services <https://github.com/open-power-ref-design-toolkit/os-services>`_
     - `ceph-services <https://github.com/open-power-ref-design-toolkit/ceph-services>`_
     - `opsmgr <https://github.com/open-power-ref-design-toolkit/opsmgr>`_
 
