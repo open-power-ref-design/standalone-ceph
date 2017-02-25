@@ -2,7 +2,7 @@
 Standalone Ceph Block Storage Cluster
 =====================================
 
-General information about the Ceph Storage can be found at:
+General information about Ceph Block Storage can be found at:
 
     - http://docs.ceph.com/docs/jewel/
 
@@ -59,10 +59,10 @@ loaded into the first controller that is setup by cluster-genesis.
 
 The OpenStack dashboard may be reached through your browser:
 
-http://<ipaddr of the first OpenStack control node>
+https://<ipaddr or hostname of an OpenStack control node>
 
 This recipe also includes an operational management console which is
-integrated into the openstack dashboard.  It monitors the cloud infrastructure
+integrated into the OpenStack dashboard.  It monitors the cloud infrastructure
 and shows metrics relates to the capacity, utilization, and health of the 
 cloud infrastructure.  It may also be configured to generate alerts when 
 components fail.  It is provided through the opsmgr repository.
@@ -90,7 +90,7 @@ to the internet and management switch in the cluster to be configured.
    Instructions for editing the file are included in the file itself.
 
    Additional information may be found in the
-   *TBD-cluster-genesis-user-guide*.
+   `Cluster Genesis User Guide <http://cluster-genesis.readthedocs.io/en/latest/>`_
 
 #. Validate the configuration file::
 
@@ -108,14 +108,14 @@ to the internet and management switch in the cluster to be configured.
 
 #. Invoke cluster-genesis to perform the bare metal installation process:
 
-   Instructions may be found in cluster-genesis.
+   Instructions may be found in Cluster Genesis User Guide identified above.
 
 #. Wait for cluster-genesis to complete, ~3 hours:
 
 #. Edit the OpenStack Installer configuration file:
 
    OpenStack installation is performed by openstack-ansible.  Instructions 
-   for editing the user configuration files of openstack is described in 
+   for editing the user configuration files of OpenStack is described in 
    general terms in os-services.
 
 #. Invoke the toolkit again to complete the installation::
