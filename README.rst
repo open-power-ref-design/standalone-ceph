@@ -48,13 +48,11 @@ prescribed manner so that they fit properly in the data center.  The two
 projects are os-services and ceph-services.  See the README files of each project
 to determine what is required here.
 
-hint..: Only os-services needs to be configured
+.. Hint:: Only os-services needs to be configured
 
-The final step is to include cluster-create.sh in the os-services
-repository to install and configure the cluster.  This includes the formation of
-the storage cluster by ceph-services and the installation and 
-configuration of operational management by opsmgr.  os-services orchestrates
-the installation process of OpenStack, Ceph, and Operational Management.  It is
+The final step is to invoke cluster-create.sh in the os-services
+repository to install and configure the cluster.  os-services orchestrates
+the installation process of OpenStack, Ceph, and Operational Management which are
 loaded into the first controller that is setup by cluster-genesis.
 
 The OpenStack dashboard may be reached through your browser:
