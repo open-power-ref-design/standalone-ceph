@@ -19,9 +19,9 @@ servers, switches, and cables.
 
 The Deployment configuration file provides a mapping of servers and switches
 to software for the purposes of deployment.  Each server is mapped to a set
-of OpenStack based software roles constituting the control plane, compute
-plane, and storage plane.  Each role is defined in terms of operating system
-system based resources such as users and networks that need to be configured
+of OpenStack based software roles constituting the control plane
+and storage plane.  Each role is defined in terms of operating system
+based resources such as users and networks that need to be configured
 to satisfy that role.
 
 The Deployment configuration file needs to be edited so that it reflects the
