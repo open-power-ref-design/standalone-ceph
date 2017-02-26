@@ -36,7 +36,7 @@ installation is properly integrated into the data center.
 At the highest level, the installation process is split into two parts::
 
 
-    > Bare metal installation of Linux 
+    > Bare metal installation of Linux
     > Installation of OpenStack, Ceph storage, and Operational Management
 
 The Deployment configuration file is fed into the bare metal installation
@@ -48,9 +48,9 @@ script that installs OpenStack and Ceph which is performed by os-services.
 More properly, in the bare metal installation step, only the installation tools
 for OpenStack and Ceph were installed, not the actual services.  The next step
 is to configure these tools, so that they install the actual services in a
-prescribed manner so that they fit properly in the data center.  The two 
-projects are os-services and ceph-services.  See the README files of each project
-to determine what is required here.
+prescribed manner so that they fit properly in the data center.  The three
+projects that are involved are os-services, ceph-services, and opsmgr.
+See the README files of each project to determine what may be configured.
 
 The final step is to invoke cluster-create.sh in the os-services
 repository to install and configure the cluster.  os-services orchestrates
@@ -63,15 +63,15 @@ https://<ipaddr or hostname of an OpenStack control node>
 
 This recipe also includes an operational management console which is
 integrated into the OpenStack dashboard.  It monitors the cloud infrastructure
-and shows metrics relates to the capacity, utilization, and health of the 
-cloud infrastructure.  It may also be configured to generate alerts when 
+and shows metrics relates to the capacity, utilization, and health of the
+cloud infrastructure.  It may also be configured to generate alerts when
 components fail.  It is provided through the opsmgr repository.
 
-.. Hint:: 
-   Only os-services must be configured before invoking create-cluster.  For 
+.. Hint::
+   Only os-services must be configured before invoking create-cluster.  For
    more info, see related projects below.
 
-   Passwords may be found in /etc/openstack_deploy/user_secrets*.yml on 
+   Passwords may be found in /etc/openstack_deploy/user_secrets*.yml on
    the first OpenStack controller node.
 
 Getting Started
@@ -101,11 +101,11 @@ to the internet and management switch in the cluster to be configured.
 
 #. Validate the configuration file::
 
-   $ git clone git://github.com/open-power-ref-design/os-services
+   $ git clone git://github.com/open-power-ref-design-toolkit/os-services
    $ cd os-services
    $ git checkout $TAG
    $ ./scripts/validate_config.py --file $CFG
-   
+
 #. Place the configuration file::
 
    $ git clone git://github.com/open-power-ref-design-toolkit/cluster-genesis
@@ -121,8 +121,8 @@ to the internet and management switch in the cluster to be configured.
 
 #. Edit the OpenStack Installer configuration file:
 
-   OpenStack installation is performed by openstack-ansible.  Instructions 
-   for editing the user configuration files of OpenStack is described in 
+   OpenStack installation is performed by openstack-ansible.  Instructions
+   for editing the user configuration files of OpenStack is described in
    general terms in os-services.
 
 #. Invoke the toolkit again to complete the installation::
@@ -131,7 +131,7 @@ to the internet and management switch in the cluster to be configured.
 
    Note this command is invoked on the first controller node.  The commands
    listed above are invoked on the deployer node.  When cluster-genesis completes,
-   it displays on the screen instructions for invoking the command above. 
+   it displays on the screen instructions for invoking the command above.
 
 Related projects
 ----------------
