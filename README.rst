@@ -1,6 +1,6 @@
-=====================================
-Standalone Ceph Block Storage Cluster
-=====================================
+=======================================
+Standalone Ceph Cluster (Block storage)
+=======================================
 
 General information about Ceph Block Storage can be found at:
 
@@ -11,26 +11,30 @@ This repository provides the following:
     - `Bill of Materials <https://github.com/open-power-ref-design/standalone-ceph/blob/master/standalone-ceph.pdf>`_
     - `Deployment configuration file <https://github.com/open-power-ref-design/standalone-ceph/blob/master/config.yml>`_
 
-The Bill of Materials document provides a description and representation of Database
-as a Service that is tuned for OpenPOWER servers.  It provides information
+The Bill of Materials document provides a description and representation of
+a Standalone Swift Cluster
+that is tuned for OpenPOWER servers.  It provides information
 such as model numbers and feature codes to simplify the ordering process
 and it provides racking and cabling rules for the preferred layout of
 servers, switches, and cables.
 
 The Deployment configuration file provides a mapping of servers and switches
 to software for the purposes of deployment.  Each server is mapped to a set
-of OpenStack based software roles constituting the control plane
-and storage plane.  Each role is defined in terms of operating system
-based resources such as users and networks that need to be configured
+of OpenStack based software roles constituting the control plane, compute
+plane, and storage plane.  Each role is defined in terms of a Linux
+distribution (Ubuntu) to be loaded and a set of operating system based
+resources such as users and networks that need to be configured
 to satisfy that role.
 
-The Deployment configuration file needs to be edited so that it reflects the
-configuration that is to be installed.  This is mostly a matter of making sure
-that the numbers of servers represented match the number of servers to be 
-installed and that IP addresses are allocated so that the installation is 
-properly integrated into the data center.   
+The Deployment configuration file must be edited prior to deployment
+to reflect the actual configuration that is to be installed.  This is
+mostly a matter of making sure that the numbers of servers represented
+match the number of servers to be installed and that externally visible
+IP addresses are allocated from a user specified pool, so that the
+installation is properly integrated into the data center.
 
-The installation process is split into two parts::
+At the highest level, the installation process is split into two parts::
+
 
     > Bare metal installation of Linux 
     > Installation of OpenStack, Ceph storage, and Operational Management
