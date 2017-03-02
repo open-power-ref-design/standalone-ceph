@@ -1,11 +1,11 @@
 task check (type : Exec) {
-     print 'Building standalone-ceph'
-     executable = "ls";
-    standardOutput = new ByteArrayOutputStream()
-    ext.output = {
-       return standardOutput.toString()
-    }
+    print 'Check task on standalone-ceph:'
+    workingDir '.'
+    // Run the default tox environment.
+    executable = "tox"
+    args "-r"
 }
+
 task do_all{
   check.execute();
 }

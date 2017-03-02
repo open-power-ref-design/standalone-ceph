@@ -12,7 +12,7 @@ This repository provides the following:
     - `Deployment configuration file <https://github.com/open-power-ref-design/standalone-ceph/blob/master/config.yml>`_
 
 The Bill of Materials document provides a description and representation of
-a Standalone Swift Cluster
+a Standalone Ceph Cluster with Operational Management
 that is tuned for OpenPOWER servers.  It provides information
 such as model numbers and feature codes to simplify the ordering process
 and it provides racking and cabling rules for the preferred layout of
@@ -20,9 +20,9 @@ servers, switches, and cables.
 
 The Deployment configuration file provides a mapping of servers and switches
 to software for the purposes of deployment.  Each server is mapped to a set
-of OpenStack based software roles constituting the control plane, compute
-plane, and storage plane.  Each role is defined in terms of a Linux
-distribution (Ubuntu) to be loaded and a set of operating system based
+of software roles constituting the control plane for the Ceph monitors
+and Operational Management, and a set of OSD nodes. Each role is defined in terms
+of a Linux distribution (Ubuntu) to be loaded and a set of operating system based
 resources such as users and networks that need to be configured
 to satisfy that role.
 
@@ -37,16 +37,16 @@ At the highest level, the installation process is split into two parts::
 
 
     > Bare metal installation of Linux
-    > Installation of OpenStack, Ceph storage, and Operational Management
+    > Installation of the Ceph cluster, OpenStack control plane, and Operational Management
 
 The Deployment configuration file is fed into the bare metal installation
 process which is performed by cluster-genesis.  The operating system is loaded
 and configured as specified in the configuration file.  Users, networks, and
 switches are configured during this step.  The last step is to invoke a small
-script that installs OpenStack and Ceph which is performed by os-services.
+script that installs the cluster software which is performed by os-services.
 
 More properly, in the bare metal installation step, only the installation tools
-for OpenStack and Ceph were installed, not the actual services.  The next step
+for cluster software are installed, not the actual services.  The next step
 is to configure these tools, so that they install the actual services in a
 prescribed manner so that they fit properly in the data center.  The three
 projects that are involved are os-services, ceph-services, and opsmgr.
@@ -54,25 +54,18 @@ See the README files of each project to determine what may be configured.
 
 The final step is to invoke cluster-create.sh in the os-services
 repository to install and configure the cluster.  os-services orchestrates
-the installation process of OpenStack, Ceph, and Operational Management which are
-loaded into the first controller that is setup by cluster-genesis.
+the installation process of Ceph, OpenStack, and Operational Management.
 
 The OpenStack dashboard may be reached through your browser:
 
-https://<ipaddr or hostname of an OpenStack control node>
+https://<ipaddr from external-floating-ipaddr in the config.yaml>
 
 This recipe also includes an operational management console which is
-integrated into the OpenStack dashboard.  It monitors the cloud infrastructure
+integrated into the OpenStack dashboard.  It monitors the cluster infrastructure
 and shows metrics relates to the capacity, utilization, and health of the
-cloud infrastructure.  It may also be configured to generate alerts when
+cluster.  It may also be configured to generate alerts when
 components fail.  It is provided through the opsmgr repository.
 
-.. Hint::
-   Only os-services must be configured before invoking create-cluster.  For
-   more info, see related projects below.
-
-   Passwords may be found in /etc/openstack_deploy/user_secrets*.yml on
-   the first OpenStack controller node.
 
 Getting Started
 ---------------
@@ -101,6 +94,8 @@ to the internet and management switch in the cluster to be configured.
 
 #. Validate the configuration file::
 
+   $ apt-get install python-pip
+   $ pip install pyyaml
    $ git clone git://github.com/open-power-ref-design-toolkit/os-services
    $ cd os-services
    $ git checkout $TAG
@@ -119,11 +114,17 @@ to the internet and management switch in the cluster to be configured.
 
 #. Wait for cluster-genesis to complete, ~3 hours:
 
-#. Edit the OpenStack Installer configuration file:
+#. Edit the OpenStack installer configuration file:
 
-   OpenStack installation is performed by openstack-ansible.  Instructions
+   OpenStack installation is performed by OpenStack-Ansible.  Instructions
    for editing the user configuration files of OpenStack is described in
    general terms in os-services.
+
+#. Customize the Ceph cluster configuration:
+
+   The Ceph cluster creation is performed by Ceph Ansible through ceph-services.
+   Customizing the installation is optional and customization instructions are
+   described in the `ceph-services README <https://github.com/open-power-ref-design-toolkit/ceph-services/README.rst>`_.
 
 #. Invoke the toolkit again to complete the installation::
 
