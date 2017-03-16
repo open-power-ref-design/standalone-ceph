@@ -31,40 +31,49 @@ vlan-mgmt-network: 16
 vlan-mgmt-client-network: 20
 port-mgmt-network: 46
 port-mgmt-data-network:
-    rack1: 47
+    rack1:
+        - 45
+        - 47
 ipaddr-mgmt-switch:
     rack1: 192.168.16.20
 ipaddr-data-switch:
-    rack1: 192.168.16.25
+    rack1:
+        - 192.168.16.25
+        - 192.168.16.30
+ipaddr-mlag-vip:
+    _rack1: 192.168.16.254
+cidr-mlag-ipl:
+    _rack1:
+        - 10.0.0.1/24
+        - 10.0.0.2/24
+mlag-vlan:
+    _rack1: 4000
+mlag-port-channel:
+    _rack1: 6
+mlag-ipl-ports:
+    _rack1:
+        -
+            - 37
+            - 38
+        -
+            - 37
+            - 38
 redundant-network: false
 userid-default: ubuntu
 password-default: passw0rd
-userid-mgmt-switch: admin        # applied to all mgmt switches
-password-mgmt-switch: admin      # applied to all mgmt switches
+userid-mgmt-switch: admin        # applies to all mgmt switches
+password-mgmt-switch: admin      # applies to all mgmt switches
 userid-data-switch: admin
 password-data-switch: admin
 internal-floating-ipaddr: 172.29.236.50
 external-floating-ipaddr: 10.0.16.50
 networks:
-    ceph-public-storage:
-        description: Organization site or external network. Ceph public storage network
-        addr: 10.0.16.0/22
-        # Note you can uncomment the following section to provide a set of IPs
-        # on this network that will be allocated to the hosts.  The default
-        # behavior is to allocate from the full subnet.
-        # available-ips:
-            # - 10.0.16.20
-            # - 10.0.16.35
-            # - 10.0.16.106 10.0.16.110  # this is an IP range
-            # - 10.0.16.115
-        broadcast: 10.0.19.255
-        gateway: 10.0.16.1
-#       dns-nameservers: 10.0.16.200
-#       dns-search: mycompany.domain.com
-        method: static
+    ext1:
+        description: Interface for eth10
+        method: manual
         eth-port: eth10
         mtu: 9000
-    external2:
+    ext2:
         description: Interface for eth11
         method: manual
         eth-port: eth11
@@ -73,6 +82,32 @@ networks:
         description: Change pxe port(eth15) to dhcp
         method: dhcp
         eth-port: eth15
+    ceph-public-storage:
+        description: Ceph public storage network
+        bond: osbond0
+        addr: 10.0.16.0/22
+        # Note you can uncomment the following section to provide a set of IPs
+        # on this network that will be allocated to the hosts.  The default
+        # behavior is to allocate from the full subnet.
+        #available-ips:
+            # - 10.0.16.20
+            # - 10.0.16.35
+            # - 10.0.16.106 10.0.16.110  # this is an IP range
+            # - 10.0.16.115
+        broadcast: 10.0.19.255
+        gateway: 10.0.16.1
+        #dns-nameservers: 10.0.16.200
+        #dns-search: mycompany.domain.com
+        method: static
+        bond-interfaces:
+        - eth10
+        - eth11
+        mtu: 9000
+        bond-primary: eth10
+        bond-mode: 4
+        optional-bond-arguments:
+            bond-miimon: 100
+            bond-lacp-rate: 1
     openstack-mgmt:
         description: OpenStack Management Network
         bridge: br-mgmt
@@ -80,7 +115,7 @@ networks:
         tcp_segmentation_offload: 'off'
         addr: 172.29.236.0/22
         vlan: 10
-        eth-port: eth10
+        eth-port: osbond0
         mtu: 9000
     ceph-replication:
         description: Ceph Replication Network
@@ -88,7 +123,7 @@ networks:
         bridge: br-replication
         method: static
         vlan: 20
-        eth-port: eth11
+        eth-port: osbond0
         mtu: 9000
 racks:
     - rack-id: rack1
@@ -107,7 +142,7 @@ node-templates:
             mac-eth11: eth11
         # Each host has one network interface for each of these ports and
         # these port numbers represent the switch port number to which the host
-        # interface is cabled.  If a port can be broken out using breakout
+        # interface is cabled. If a port can be broken out using breakout
         # cables, then this would be specified as '- <port>/<sub-port>'.
         # To add or remove hosts for this node-template you add or remove
         # switch port numbers to these ports.
@@ -122,19 +157,22 @@ node-templates:
                     - 4
                     - 5
                     - 6
-            eth10:
+
+            eth10:       # for MLAG setup, these connect to 1st data switch
                 rack1:
                     - 1
                     - 2
                     - 3
-            eth11:
+            eth11:       # for MLAG setup, these connect to 2nd data switch
                 rack1:
-                    - 4
-                    - 5
-                    - 6
+                    - 1
+                    - 2
+                    - 3
         networks:
             - openstack-mgmt
             - ceph-public-storage
+            - ext1
+            - ext2
             - pxe-dhcp
     ceph-osd:
         hostname: cephosd
@@ -152,32 +190,33 @@ node-templates:
         # To add or remove hosts for this node-template you add or remove
         # switch port numbers to these ports.
         ports:
-            pxe:
-                rack1:
-                    - 7
-                    - 8
-                    - 9
             ipmi:
                 rack1:
-                    - 10
-                    - 11
-                    - 12
-            eth10:
-                rack1:
                     - 7
                     - 8
                     - 9
-            eth11:
+            pxe:
                 rack1:
                     - 10
                     - 11
                     - 12
+            eth10:       # for MLAG setup, these connect to 1st data switch
+                rack1:
+                    - 4
+                    - 5
+                    - 6
+            eth11:       # for MLAG setup, these connect to 2nd data switch
+                rack1:
+                    - 4
+                    - 5
+                    - 6
         networks:
-            - ceph-public-storage
-            - external2
+            - ext1
+            - ext2
             - openstack-mgmt
             - ceph-replication
             - pxe-dhcp
+            - ceph-public-storage
         domain-settings:
             journal-devices:
                 - /dev/sdc
@@ -204,4 +243,3 @@ software-bootstrap:
         wget ${URL}
         chmod +x bootstrap-solution.sh
         ./bootstrap-solution.sh
-
