@@ -193,12 +193,12 @@ node-templates:
         # To add or remove hosts for this node-template you add or remove
         # switch port numbers to these ports.
         ports:
-            ipmi:
+            pxe:
                 rack1:
                     - 7
                     - 8
                     - 9
-            pxe:
+            ipmi:
                 rack1:
                     - 10
                     - 11
