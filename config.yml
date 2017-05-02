@@ -20,7 +20,7 @@
 # It features three controller nodes where the Ceph monitor and operational
 # management software will run and Ceph OSD nodes.
 
-version: 1.1
+version: 1.2
 
 reference-architecture:
     - ceph-standalone
@@ -58,7 +58,7 @@ mlag-ipl-ports:
         -
             - 37
             - 38
-redundant-network: false
+redundant-network: true
 userid-default: ubuntu
 password-default: passw0rd
 userid-mgmt-switch: admin        # applies to all mgmt switches
@@ -77,6 +77,16 @@ networks:
         description: Interface for eth11
         method: manual
         eth-port: eth11
+        mtu: 9000
+    ext3:
+        description: Interface for eth12
+        method: manual
+        eth-port: eth12
+        mtu: 9000
+    ext4:
+        description: Interface for eth13
+        method: manual
+        eth-port: eth13
         mtu: 9000
     pxe-dhcp:
         description: Change pxe port(eth15) to dhcp
@@ -108,6 +118,20 @@ networks:
         optional-bond-arguments:
             bond-miimon: 100
             bond-lacp-rate: 1
+    ceph-internal:
+        description: bonded interface
+        bond: osbond1
+        method: manual
+        bond-interfaces:
+        # for full protection against failure, eth12 and eth13 should come from different NICs
+            - eth12
+            - eth13
+        mtu: 9000
+        bond-primary: eth12
+        bond-mode: 4
+        optional-bond-arguments:
+            bond-miimon: 100
+            bond-lacp-rate: 1
     openstack-mgmt:
         description: OpenStack Management Network
         bridge: br-mgmt
@@ -123,7 +147,7 @@ networks:
         bridge: br-replication
         method: static
         vlan: 20
-        eth-port: osbond0
+        eth-port: osbond1
         mtu: 9000
 racks:
     - rack-id: rack1
@@ -143,6 +167,8 @@ node-templates:
             mac-pxe: eth15
             mac-eth10: eth10
             mac-eth11: eth11
+            mac-eth12: eth12
+            mac-eth13: eth13
         # Each host has one network interface for each of these ports and
         # these port numbers represent the switch port number to which the host
         # interface is cabled. If a port can be broken out using breakout
@@ -171,11 +197,24 @@ node-templates:
                     - 1
                     - 2
                     - 3
+            eth12:       # for MLAG setup, these connect to 1st data switch
+                rack1:
+                    - 4
+                    - 5
+                    - 6
+            eth13:       # for MLAG setup, these connect to 2nd data switch
+                rack1:
+                    - 4
+                    - 5
+                    - 6
         networks:
             - openstack-mgmt
             - ceph-public-storage
+            - ceph-internal
             - ext1
             - ext2
+            - ext3
+            - ext4
             - pxe-dhcp
     ceph-osd:
         hostname: cephosd
@@ -186,6 +225,8 @@ node-templates:
             mac-pxe: eth15
             mac-eth10: eth10
             mac-eth11: eth11
+            mac-eth12: eth12
+            mac-eth13: eth13
         # Each host has one network interface for each of these ports and
         # these port numbers represent the switch port number to which the host
         # interface is cabled.  If a port can be broken out using breakout
@@ -203,23 +244,36 @@ node-templates:
                     - 10
                     - 11
                     - 12
-            eth10:       # for MLAG setup, these connect to 1st data switch
+            eth10:
                 rack1:
-                    - 4
-                    - 5
-                    - 6
-            eth11:       # for MLAG setup, these connect to 2nd data switch
+                    - 7
+                    - 8
+                    - 9
+            eth11:
                 rack1:
-                    - 4
-                    - 5
-                    - 6
+                    - 7
+                    - 8
+                    - 9
+            eth12:
+                rack1:
+                    - 10
+                    - 11
+                    - 12
+            eth13:
+                rack1:
+                    - 10
+                    - 11
+                    - 12
         networks:
-            - ext1
-            - ext2
             - openstack-mgmt
             - ceph-replication
-            - pxe-dhcp
+            - ceph-internal
             - ceph-public-storage
+            - ext1
+            - ext2
+            - ext3
+            - ext4
+            - pxe-dhcp
         domain-settings:
             journal-devices:
                 - /dev/sdc
@@ -246,3 +300,4 @@ software-bootstrap:
         wget ${URL}
         chmod +x bootstrap-solution.sh
         ./bootstrap-solution.sh
+
