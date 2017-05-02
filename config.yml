@@ -20,7 +20,7 @@
 # It features three controller nodes where the Ceph monitor and operational
 # management software will run and Ceph OSD nodes.
 
-version: 1.2
+version: 1.1
 
 reference-architecture:
     - ceph-standalone
