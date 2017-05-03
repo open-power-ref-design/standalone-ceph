@@ -134,6 +134,13 @@ to the internet and management switch in the cluster to be configured.
    listed above are invoked on the deployer node.  When cluster-genesis completes,
    it displays on the screen instructions for invoking the command above.
 
+Verifying an install
+--------------------
+
+After successful installation, verify that Ceph services are running correctly.
+
+* On the controller check the health of the ceph cluster using ``ceph -s``.
+
 Related projects
 ----------------
 
