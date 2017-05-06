@@ -8,7 +8,7 @@ General information about Ceph Block Storage can be found at:
 
 This repository provides the following:
 
-    - `Bill of Materials <https://github.com/open-power-ref-design/standalone-ceph/blob/master/standalone-ceph.pdf>`_
+    - `Bill of Materials <https://github.com/open-power-ref-design/standalone-ceph/blob/master/docs/bom.pdf>`_
     - `Deployment configuration file <https://github.com/open-power-ref-design/standalone-ceph/blob/master/config.yml>`_
 
 The Bill of Materials document provides a description and representation of
@@ -73,7 +73,7 @@ Getting Started
 The toolkit runs on an Ubuntu 16.04 OpenPOWER server or VM that is connected
 to the internet and management switch in the cluster to be configured.
 
-#. Read `standalone-ceph.pdf <https://github.com/open-power-ref-design/standalone-ceph/blob/master/standalone-ceph.pdf>`_
+#. Read the `Bill Of Materials <https://github.com/open-power-ref-design/standalone-ceph/blob/master/docs/bom.pdf>`_
 
 #. Rack and cable hardware as indicated
 
